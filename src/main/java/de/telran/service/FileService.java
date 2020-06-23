@@ -1,8 +1,5 @@
 package de.telran.service;
 
-import javax.imageio.ImageIO;
-import java.awt.image.BufferedImage;
-import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Collections;
@@ -19,16 +16,4 @@ public class FileService {
             return Collections.EMPTY_LIST;
         }
     }
-
-    public void saveImageAsFile(BufferedImage image) {
-
-        try {
-            ImageIO.write(image, "jpg",new File("/Users/slukichev/Downloads/images/img_"+image.hashCode()+".jpg"));
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
-
-    }
-
-    //https://s3-eu-west-1.amazonaws.com/lukaroundimg/beelitz2017/1a.jpg -> s3-eu-west-1.amazonaws.com.lukaroundimg.beelitz2017.1a.jpg
 }

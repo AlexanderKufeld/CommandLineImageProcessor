@@ -2,6 +2,7 @@ package de.telran.entity;
 
 import java.awt.image.BufferedImage;
 
+<<<<<<< HEAD
 public class DownloadedImage {
     private BufferedImage image;
     private boolean isSuccessfull;
@@ -25,3 +26,23 @@ public class DownloadedImage {
         return imageDescriptor;
     }
 }
+=======
+    public class DownloadedImage {
+        private BufferedImage image;
+        private boolean isSuccessfull;
+
+        public DownloadedImage(BufferedImage image, boolean status) {
+            this.image = image;
+            this.isSuccessfull = status;
+        }
+
+        public BufferedImage getImage() {
+            return image;
+        }
+
+        public boolean isSuccessfull() {
+            return isSuccessfull;
+        }
+    }
+
+>>>>>>> downloadservice and added test_file
