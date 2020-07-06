@@ -1,5 +1,8 @@
+
 import de.telran.entity.ImageDescriptor;
-import de.telran.service.FileService;
+import de.telran.service.ConfigService;
+import de.telran.service.CsvFileService;
+
 import de.telran.service.ImageDescriptorService;
 import org.junit.Test;
 
@@ -13,33 +16,34 @@ import static org.mockito.Mockito.*;
 public class ImageDescriptorServiceTest {
 
     //mock creation
-    FileService fileService = mock(FileService.class);
+    CsvFileService csvFileService = mock(CsvFileService.class);
+    ConfigService configService = mock(ConfigService.class);
 
     @Test
     public void testGetEmptyImageDescriptors() {
         //configure mocks
-        when(fileService.loadStringsFromFile("testfile.txt")).thenReturn(Collections.emptyList());
+        when(csvFileService.loadStringsFromFile("testfile.txt")).thenReturn(Collections.emptyList());
 
         //execute testing code
 
-        ImageDescriptorService service = new ImageDescriptorService(fileService);
+        ImageDescriptorService service = new ImageDescriptorService(csvFileService,configService);
         List<ImageDescriptor> imageDescriptors = service.getImageDescriptors("testfile.txt");
 
         //assert results
         assertTrue(imageDescriptors.isEmpty());
 
-        verify(fileService, times(1)).loadStringsFromFile("testfile.txt");
+        verify(csvFileService, times(1)).loadStringsFromFile("testfile.txt");
 
     }
 
     @Test
     public void testGetImageDescriptors() {
         //configure mocks
-        when(fileService.loadStringsFromFile("testfile.txt")).thenReturn(createTestString());
+        when(csvFileService.loadStringsFromFile("testfile.txt")).thenReturn(createTestString());
 
         //execute testing code
 
-        ImageDescriptorService service = new ImageDescriptorService(fileService);
+        ImageDescriptorService service = new ImageDescriptorService(csvFileService,configService);
         List<ImageDescriptor> imageDescriptors = service.getImageDescriptors("testfile.txt");
 
         //assert results
@@ -54,9 +58,6 @@ public class ImageDescriptorServiceTest {
         return Arrays.asList("abc;PREVIEW", "defiklm;THUMBNAIL");
     }
 
-    private static List<ImageDescriptor> createTestImageDescriptors() {
-        return Arrays.asList(
-                new ImageDescriptor("abc", "PREVIEW"),
-                new ImageDescriptor("defiklm", "THUMBNAIL"));
-    }
+
 }
+

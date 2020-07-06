@@ -1,65 +1,75 @@
 package de.telran;
 
-import de.telran.entity.DownloadedImage;
+import de.telran.entity.ActionableImage;
 import de.telran.entity.ImageDescriptor;
-import de.telran.service.DownloadService;
-import de.telran.service.FileService;
-import de.telran.service.ImageDescriptorService;
+import de.telran.factory.ImageActionFactory;
+import de.telran.service.*;
 
-import java.awt.image.BufferedImage;
 import java.util.List;
 import java.util.stream.Collectors;
 
 public class ImageProcessor {
+    private ConfigService configService;
     private ImageDescriptorService imageDescriptorService;
     private DownloadService downloadService;
-    private FileService fileService;
-    //private DownloadService downloadService;
-    //private ImageService imageService;
-    //....
+    private ImageService imageService;
+    private ImageFileService imageFileService;
+    private CsvFileService csvFileService;
+
 
     public ImageProcessor(ImageDescriptorService imageDescriptorService,
                           DownloadService downloadService,
-                          FileService fileService) {
+                          ImageService imageService,
+                          ImageFileService imageFileService,CsvFileService csvFileService,
+                          ConfigService configService) {
         this.imageDescriptorService = imageDescriptorService;
         this.downloadService = downloadService;
-        this.fileService = fileService;
+        this.imageService = imageService;
+        this.imageFileService = imageFileService;
+        this.csvFileService = csvFileService;
+        this.configService = configService;
     }
 
     public void doProcessing(String fileName) {
 
         List<ImageDescriptor> imageDescriptors = imageDescriptorService.getImageDescriptors(fileName);
 
-        List<String> urls = imageDescriptors.stream().map(d -> d.getImageUrlName()).collect(Collectors.toList());
-
-        List<DownloadedImage> downloadedImages = downloadService.downloadImages(urls);
-
-        List<BufferedImage> successfullyDownloadedImages = downloadedImages.stream()
-                .filter(DownloadedImage::isSuccessfull)
-                .map(DownloadedImage::getImage)
+        List<ActionableImage> actionableImages = imageDescriptors
+                .stream()
+                .map(i -> new ActionableImage(null, false, i.getImageUrlName(), i.getActionName()))
                 .collect(Collectors.toList());
 
-        successfullyDownloadedImages.forEach(i -> fileService.saveImageAsFile(i));
+        List<ActionableImage> downloadedImages = downloadService.downloadImages(actionableImages);
 
+        List<ActionableImage> successfullyDownloadedImages = downloadedImages.stream()
+                .filter(ActionableImage::isSuccessful)
+                .collect(Collectors.toList());
 
-        //call download service
-        //call image service
-        //
+        List<ActionableImage> processedImages = successfullyDownloadedImages
+                .stream()
+                .map(i -> imageService.processImage(i))
+                .collect(Collectors.toList());
+
+        processedImages.forEach(i -> imageFileService.saveImageAsFile(i));
 
     }
 
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws Exception {
 
         String fileName = args[0];
+        ConfigService configService = new ConfigService();
+        ImageFileService imageFileService = new ImageFileService(configService);
+        CsvFileService csvFileService = new CsvFileService();
 
-        FileService fileService = new FileService();
-
-        ImageDescriptorService imageDescriptorService = new ImageDescriptorService(fileService);
+        ImageDescriptorService imageDescriptorService = new ImageDescriptorService(csvFileService,configService);
 
         DownloadService downloadService = new DownloadService();
 
-        ImageProcessor processor = new ImageProcessor(imageDescriptorService, downloadService, fileService);
+        ImageService imageService = new ImageService(new ImageActionFactory(new ActionsConfigService()));
+
+        ImageProcessor processor = new ImageProcessor(imageDescriptorService, downloadService, imageService, imageFileService,csvFileService,
+                configService);
 
         processor.doProcessing(fileName);
 

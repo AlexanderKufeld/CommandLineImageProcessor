@@ -9,8 +9,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class FileService {
-
+public class CsvFileService {
     public List<String> loadStringsFromFile(String fileName) {
         try {
             return Files.lines(Paths.get(fileName)).collect(Collectors.toList());
@@ -20,13 +19,15 @@ public class FileService {
         }
     }
 
+
     public void saveImageAsFile(BufferedImage image) {
 
         try {
-            ImageIO.write(image, "jpg",new File("/Users/slukichev/Downloads/images/img_"+image.hashCode()+".jpg"));
+            ImageIO.write(image, "jpg",new File("C:\\Users\\Tatjana Kufeld\\Desktop\\Project\\CommandLineImageProcessor\\test_images.csv\"+image.hashCode()"));
         } catch (Exception ex) {
             ex.printStackTrace();
         }
 
     }
+
 }
