@@ -5,13 +5,17 @@ import java.awt.image.BufferedImage;
 
 public class GrayscaleImageAction implements ImageAction {
     @Override
+    public String getName() {
+        return "GRAYSCALE";
+    }
+
+    @Override
     public BufferedImage doAction(BufferedImage source) {
         System.out.println("Grayscaling an image");
-
         return doGrayScale(source);
     }
 
-    private BufferedImage doGrayScale(BufferedImage source) {
+    private static BufferedImage doGrayScale(BufferedImage source) {
 
         BufferedImage result = new BufferedImage(source.getWidth(), source.getHeight(), source.getType());
         for (int x = 0; x < source.getWidth(); x++) {

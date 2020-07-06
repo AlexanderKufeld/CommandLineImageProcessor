@@ -6,8 +6,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class FileService {
-
+public class CsvFileService {
     public List<String> loadStringsFromFile(String fileName) {
         try {
             return Files.lines(Paths.get(fileName)).collect(Collectors.toList());

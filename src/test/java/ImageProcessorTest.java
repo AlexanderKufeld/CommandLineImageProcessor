@@ -1,18 +1,15 @@
+
 import de.telran.ImageProcessor;
-import de.telran.entity.DownloadedImage;
+import de.telran.entity.ActionableImage;
 import de.telran.entity.ImageDescriptor;
-import de.telran.service.DownloadService;
-import de.telran.service.FileService;
-import de.telran.service.ImageDescriptorService;
-import de.telran.service.ImageService;
+import de.telran.service.*;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.awt.image.BufferedImage;
-import java.awt.image.IndexColorModel;
+
 import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
+
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
@@ -22,19 +19,24 @@ public class ImageProcessorTest {
     ImageDescriptorService imageDescriptorService = mock(ImageDescriptorService.class);
     DownloadService downloadService = mock(DownloadService.class);
     ImageService imageService = mock(ImageService.class);
-    FileService fileService = mock(FileService.class);
+    ImageFileService imageFileService = mock(ImageFileService.class);
+    CsvFileService csvFileService = mock(CsvFileService.class);
+    ConfigService configService = mock(ConfigService.class);
+
 
     ImageProcessor processor;
 
     @Before
     public void setUp() {
-        processor = new ImageProcessor(imageDescriptorService, downloadService, imageService, fileService);
+        processor = new ImageProcessor(imageDescriptorService, downloadService, imageService, imageFileService,
+                csvFileService,configService);
     }
 
     @Test
     public void testDoProcessing() {
         //configure mock
         List<ImageDescriptor> testImageDescriptors = createTestImageDescriptors();
+        //List<ActionableImage> downloadedImage = createDownloadedImage();
         when(imageDescriptorService.getImageDescriptors(any())).thenReturn(testImageDescriptors);
         when(downloadService.downloadImages(any())).thenReturn(createDownloadedImage());
 
@@ -43,17 +45,16 @@ public class ImageProcessorTest {
 
         //verify
         verify(imageDescriptorService, times(1)).getImageDescriptors("test.txt");
-        verify(downloadService, times(1)).downloadImages(testImageDescriptors);
+        //verify(downloadService, times(1)).downloadImages(downloadedImage);
 
-        verify(fileService, times(2)).saveImageAsFile(any());
+        verify(imageFileService, times(2)).saveImageAsFile(any());
 
     }
 
-    private static List<DownloadedImage> createDownloadedImage() {
+    private static List<ActionableImage> createDownloadedImage() {
         return Arrays.asList(
-                new DownloadedImage(null, true, new ImageDescriptor("http://server.com/image1.jpg", "PREVIEW")),
-                new DownloadedImage(null, true, new ImageDescriptor("http://server.com/image2.jpg", "THUMBNAIL"))
-                );
+                new ActionableImage(null, true, "http://server.com/image1.jpg", "PREVIEW"),
+                new ActionableImage(null, true, "http://server.com/image2.jpg", "THUMBNAIL"));
     }
 
     private static List<ImageDescriptor> createTestImageDescriptors() {
@@ -62,3 +63,6 @@ public class ImageProcessorTest {
                 new ImageDescriptor("http://server.com/image2.jpg", "THUMBNAIL"));
     }
 }
+
+
+
