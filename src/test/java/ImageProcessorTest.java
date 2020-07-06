@@ -14,8 +14,12 @@ import java.util.List;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
-public class ImageProcessorTest {
+import de.telran.ImageProcessor;
+import de.telran.entity.ImageDescriptor;
+import de.telran.service.ImageDescriptorService;
+import org.junit.Test;
 
+<<<<<<< HEAD
     ImageDescriptorService imageDescriptorService = mock(ImageDescriptorService.class);
     DownloadService downloadService = mock(DownloadService.class);
     ImageService imageService = mock(ImageService.class);
@@ -56,13 +60,41 @@ public class ImageProcessorTest {
                 new ActionableImage(null, true, "http://server.com/image1.jpg", "PREVIEW"),
                 new ActionableImage(null, true, "http://server.com/image2.jpg", "THUMBNAIL"));
     }
+=======
+import java.util.Arrays;
+import java.util.List;
+
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.*;
+
+public class ImageProcessorTest {
+
+    ImageDescriptorService imageDescriptorService = mock(ImageDescriptorService.class);
+
+//    @Test
+//    public void testDoProcessing() {
+//        //configure mock
+//        when(imageDescriptorService.getImageDescriptors(any())).thenReturn(createTestImageDescriptors());
+//
+//        //execute test method
+//        ImageProcessor processor = new ImageProcessor(imageDescriptorService);
+//        processor.doProcessing("test.txt");
+//
+//        //verify
+//        verify(imageDescriptorService, times(1)).getImageDescriptors("test.txt");
+//    }
+>>>>>>> e0e0efc806f0f30bcf76acfece8abfc8f9a8b758
 
     private static List<ImageDescriptor> createTestImageDescriptors() {
         return Arrays.asList(
                 new ImageDescriptor("http://server.com/image1.jpg", "PREVIEW"),
                 new ImageDescriptor("http://server.com/image2.jpg", "THUMBNAIL"));
     }
+<<<<<<< HEAD
 }
 
 
 
+=======
+}
+>>>>>>> e0e0efc806f0f30bcf76acfece8abfc8f9a8b758
