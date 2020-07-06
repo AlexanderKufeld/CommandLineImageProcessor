@@ -18,17 +18,16 @@ public class CsvFileService {
             return Collections.EMPTY_LIST;
         }
     }
-<<<<<<< HEAD:src/main/java/de/telran/service/CsvFileService.java
-=======
+
 
     public void saveImageAsFile(BufferedImage image) {
 
         try {
-            ImageIO.write(image, "jpg",new File("/Users/slukichev/Downloads/images/img_"+image.hashCode()+".jpg"));
+            ImageIO.write(image, "jpg",new File("C:\\Users\\Tatjana Kufeld\\Desktop\\Project\\CommandLineImageProcessor\\test_images.csv\"+image.hashCode()"));
         } catch (Exception ex) {
             ex.printStackTrace();
         }
 
     }
->>>>>>> e0e0efc806f0f30bcf76acfece8abfc8f9a8b758:src/main/java/de/telran/service/FileService.java
+
 }

@@ -1,5 +1,4 @@
 package de.telran.entity;
-
 import java.awt.image.BufferedImage;
 
 public class ActionableImage {
